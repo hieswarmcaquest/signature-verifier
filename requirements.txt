@@ -3,4 +3,5 @@ opencv-python
 numpy
 pillow
 scikit-image
-pydantic==1.10.13
+pydantic>=2.1
+
