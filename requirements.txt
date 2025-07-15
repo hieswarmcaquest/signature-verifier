@@ -1,6 +1,5 @@
-gradio==4.29.0
+gradio
 opencv-python
-scikit-image
-Pillow
 numpy
-
+Pillow
+scikit-image
