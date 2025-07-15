@@ -48,5 +48,6 @@ demo = gr.Interface(
     title="🧠 Signature Verifier (ORB + SSIM)",
     description="Compares two signatures using ORB keypoints and SSIM structure analysis. Tuned for real-world signature matching."
 )
+demo.launch(server_name="0.0.0.0", server_port=7860)
 
-demo.launch()
+#demo.launch()
