@@ -73,5 +73,5 @@ demo = gr.Interface(
 # -------------------------
 # Launch App
 # -------------------------
-demo.launch(share=False, server_name="0.0.0.0", server_port=7860)
-
+#demo.launch(share=False, server_name="0.0.0.0", server_port=7860)
+demo.launch(share=True, server_name="0.0.0.0", server_port=7860)
