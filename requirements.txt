@@ -1,0 +1,6 @@
+gradio==4.29.0
+opencv-python
+scikit-image
+Pillow
+numpy
+
