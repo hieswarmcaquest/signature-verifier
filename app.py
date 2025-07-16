@@ -31,7 +31,6 @@ def verify_signature(test_img_pil, ref_img_pil, orb_threshold=0.04, ssim_thresho
     ratio = good / total if total > 0 else 0
     ssim_score = compute_ssim(gray1, gray2)
 
-    # Debug log
     print("=== Debug Log ===")
     print(f"ORB Matches: {good}/{total} (Ratio: {ratio:.2f})")
     print(f"SSIM Score: {ssim_score:.2f}")
@@ -44,11 +43,19 @@ def verify_signature(test_img_pil, ref_img_pil, orb_threshold=0.04, ssim_thresho
     else:
         status = "❌ Forged Signature"
 
+    # Display each result line separately in bold
+   # result = (
+    #    f"**{status}**\n\n"
+    #    f"**Good ORB matches: {good}/{total} (Ratio: {ratio:.2f})**\n"
+    #    f"**SSIM Score: {ssim_score:.2f}**\n"
+    #    f"**Thresholds Used → ORB: {orb_threshold}, SSIM: {ssim_threshold}**"
+    #)
+
     result = (
-        f"{status}\n\n"
-        f"Good ORB matches: **{good}/{total}** (Ratio: {ratio:.2f})\n"
-        f"SSIM Score: **{ssim_score:.2f}**\n"
-        f"Thresholds Used → ORB: `{orb_threshold}`, SSIM: `{ssim_threshold}`"
+        f"**{status}**<br><br>"
+        f"**Good ORB matches: {good}/{total} (Ratio: {ratio:.2f})**<br>"
+        f"**SSIM Score: {ssim_score:.2f}**<br>"
+        f"**Thresholds Used → ORB: {orb_threshold}, SSIM: {ssim_threshold}**"
     )
 
     explanation = (
@@ -71,7 +78,7 @@ demo = gr.Interface(
         gr.Slider(0.01, 1.0, value=0.74, step=0.01, label="SSIM Threshold")
     ],
     outputs=[
-        gr.Text(label="Verification Result"),
+        gr.Markdown(label="Verification Result"),
         gr.Markdown(label="Interpretation Guide")
     ],
     title="🧠 Signature Verifier (ORB + SSIM)",
