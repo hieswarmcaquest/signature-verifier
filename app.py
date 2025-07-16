@@ -26,16 +26,42 @@ def verify_signature(test_img_pil, ref_img_pil, orb_threshold=0.04, ssim_thresho
     ref_img = cv2.cvtColor(np.array(ref_img_pil.convert("L")), cv2.COLOR_GRAY2BGR)
     gray1 = cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(ref_img, cv2.COLOR_BGR2GRAY)
+
     good, total = match_orb(gray1, gray2)
     ratio = good / total if total > 0 else 0
     ssim_score = compute_ssim(gray1, gray2)
+
+    # Debug log
+    print("=== Debug Log ===")
+    print(f"ORB Matches: {good}/{total} (Ratio: {ratio:.2f})")
+    print(f"SSIM Score: {ssim_score:.2f}")
+    print(f"ORB Threshold Used: {orb_threshold}")
+    print(f"SSIM Threshold Used: {ssim_threshold}")
+    print("=================")
+
     if ratio > orb_threshold or ssim_score > ssim_threshold:
         status = "✅ Genuine Signature"
     else:
         status = "❌ Forged Signature"
-    reason = f"Good ORB matches: **{good}/{total}** (Ratio: {ratio:.2f})\\nSSIM Score: **{ssim_score:.2f}**"
-    return f"{status}\\n\\n{reason}"
 
+    result = (
+        f"{status}\n\n"
+        f"Good ORB matches: **{good}/{total}** (Ratio: {ratio:.2f})\n"
+        f"SSIM Score: **{ssim_score:.2f}**\n"
+        f"Thresholds Used → ORB: `{orb_threshold}`, SSIM: `{ssim_threshold}`"
+    )
+
+    explanation = (
+        "**Explanation:**\n"
+        "- **ORB Match Ratio** reflects how many keypoints matched between the two signatures.\n"
+        "- **SSIM (Structural Similarity)** measures image-level similarity (brightness, shape, contrast).\n"
+        "- If either ORB match ratio or SSIM score exceeds the threshold, the signature is accepted as genuine.\n"
+        "- Adjust thresholds using sliders to tune the sensitivity of the system."
+    )
+
+    return result, explanation
+
+# Gradio UI
 demo = gr.Interface(
     fn=verify_signature,
     inputs=[
@@ -44,10 +70,13 @@ demo = gr.Interface(
         gr.Slider(0.01, 1.0, value=0.04, step=0.01, label="ORB Match Ratio Threshold"),
         gr.Slider(0.01, 1.0, value=0.74, step=0.01, label="SSIM Threshold")
     ],
-    outputs=gr.Text(label="Verification Result"),
+    outputs=[
+        gr.Text(label="Verification Result"),
+        gr.Markdown(label="Interpretation Guide")
+    ],
     title="🧠 Signature Verifier (ORB + SSIM)",
     description="Compares two signatures using ORB keypoints and SSIM structure analysis. Tuned for real-world signature matching."
 )
+
 demo.launch(server_name="0.0.0.0", server_port=7860)
 
-#demo.launch()
